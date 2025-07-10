@@ -1,3 +1,4 @@
+# External Imports
 import os
 import unittest
 import tempfile
@@ -5,6 +6,7 @@ import numpy as np
 from unittest.mock import patch
 import cv2
 
+# Internal Imports
 from classify.ocr_number_extractor import OCRNumberExtractor
 
 

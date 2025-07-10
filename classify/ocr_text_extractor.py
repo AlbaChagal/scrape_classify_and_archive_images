@@ -1,42 +1,50 @@
+# External Imports
 import pytesseract
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, JpegImagePlugin
 import cv2
 import numpy as np
 import os
 
 
-def preprocess_image(image_path):
+def preprocess_image(image_path: str) -> Image.Image:
     # Open the image using PIL
-    img = Image.open(image_path)
+    img: JpegImagePlugin.JpegImageFile = Image.open(image_path)
 
     # Convert image to grayscale (this is a common first step for OCR)
-    gray_img = img.convert('L')
+    gray_img: Image.Image = img.convert('L')
 
     # Apply a threshold to binarize the image (helps to separate text from background)
     # Convert the image to a NumPy array
-    open_cv_image = np.array(gray_img)
+    open_cv_image: np.ndarray = np.array(gray_img)
 
     # Use Otsu's thresholding to convert to black and white
+    binary_img: np.ndarray
     _, binary_img = cv2.threshold(open_cv_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
     # Convert back to PIL for consistency
-    binary_img_pil = Image.fromarray(binary_img)
+    binary_img_pil: Image.Image = Image.fromarray(binary_img)
 
     return binary_img_pil
 
 
-def extract_text_from_image(image_path):
+def extract_text_from_image(image_path: str) -> str:
     # Preprocess the image to improve OCR results
-    processed_img = preprocess_image(image_path)
+    processed_img: Image.Image = preprocess_image(image_path)
 
     # Use pytesseract to do OCR (only in Hebrew)
-    text = pytesseract.image_to_string(processed_img, lang='heb',
+    text: str = pytesseract.image_to_string(processed_img, lang='heb',
                                        config='--psm 6')  # Use page segmentation mode 6 (Assume single uniform block of text)
 
     return text
 
 
 def save_text_files_in_folder(folder_path):
+
+    # Declare all loop-variable types once in advance (for Cythonization)
+    image_path: str
+    text: str
+    text_file_path: str
+
     # Iterate over all images in the folder
     for filename in os.listdir(folder_path):
         # Only process image files (with jpg, jpeg, png, etc.)

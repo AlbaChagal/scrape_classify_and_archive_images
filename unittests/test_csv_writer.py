@@ -1,3 +1,4 @@
+# External Imports
 from openpyxl import load_workbook
 import os
 from PIL import Image as PILImage
@@ -5,6 +6,7 @@ import tempfile
 import shutil
 import unittest
 
+# Internal Imports
 from archive.csv_writer import CSVWriter
 
 

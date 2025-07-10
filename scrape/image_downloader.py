@@ -1,16 +1,27 @@
+# External Imports
 import os
 import requests
 from typing import List
 
+# Internal Imports
 from data.urls import img_urls as urls
 
 
 class ImageDownloader:
+    """
+    A Class for downloading images from URLs
+    """
     def __init__(self):
         pass
 
     @staticmethod
-    def download_image(img_urls: List[str], output_dir: str):
+    def download_image(img_urls: List[str], output_dir: str) -> None:
+        """
+        Downloads all images from all given URLs
+        :param img_urls: The URLs to download the images from
+        :param output_dir: The path to the desired output directory for saving the images
+        :return: None
+        """
         os.makedirs(output_dir, exist_ok=True)
 
         # Declare all loop-variable types once in advance (for Cythonization)

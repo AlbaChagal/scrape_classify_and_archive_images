@@ -1,8 +1,10 @@
+# External Imports
 import os
 import unittest
 import tempfile
 from unittest.mock import patch, MagicMock
 
+# Internal Imports
 from scrape.image_downloader import ImageDownloader
 
 

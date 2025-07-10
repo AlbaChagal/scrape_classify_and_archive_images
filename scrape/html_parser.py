@@ -1,3 +1,4 @@
+# External Imports
 from typing import Dict, List
 from bs4 import BeautifulSoup
 from bs4.element import ResultSet
@@ -8,11 +9,17 @@ class HTMLParser(object):
     An HTML parser class to parse HTML pages, for image URL extraction.
     All methods are static/class methods
     """
-    def __init__(self, url: str, ):
+    def __init__(self):
         pass
 
     @staticmethod
     def extract_img_urls(html_content: str) -> List[str]:
+        """
+        Extracts the URL for every image in the given HTML string
+        :param html_content: The HTML as aa string to extract the image URLs from
+        :return: List of URLs of images
+        """
+
         # Initialize BeautifulSoup with the provided HTML content
         soup: BeautifulSoup = BeautifulSoup(html_content, 'html.parser')
 
@@ -26,6 +33,13 @@ class HTMLParser(object):
 
     @staticmethod
     def get_html_content(url: str, is_debug: bool = False) -> str:
+        """
+        Extract the HTML string from a given URL
+        :param url: The URL to extract the HTML from
+        :param is_debug: Indicating if to print verbose information while extracting
+        :return: A string containing the desired HTML
+        """
+
         # Add headers to avoid being blocked
         headers: Dict[str, str] = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"

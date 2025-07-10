@@ -1,9 +1,11 @@
+# External Imports
 import os
 import unittest
 import tempfile
 from unittest.mock import patch
 from PIL import Image
 
+# Internal Imports
 from classify.ocr_text_extractor import save_text_files_in_folder
 
 

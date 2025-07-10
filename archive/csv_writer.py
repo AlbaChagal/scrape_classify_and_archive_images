@@ -1,13 +1,17 @@
-import os
-from typing import Tuple, Optional
-
+# External Imports
 from openpyxl import Workbook
 from openpyxl.drawing.image import Image
 from openpyxl.worksheet.worksheet import Worksheet
+import os
+from typing import Tuple, Optional
 
 
 class CSVWriter:
     def __init__(self, csv_file: str, ):
+        """
+        A class writing CSV files
+        :param csv_file: The path to the output CSV file
+        """
         assert type(csv_file) is str, f'csv_file is not a string, got {type(csv_file)}'
         self.csv_file: str = csv_file
         self.wb: Workbook = Workbook()
@@ -15,6 +19,10 @@ class CSVWriter:
 
     @staticmethod
     def get_allowed_image_formats() -> Tuple[str, str, str, str, str]:
+        """
+        Returns the allowed formats for the CSVWriter
+        :return: Allowed formats
+        """
         return 'jpg', 'jpeg', 'png', 'bmp', 'gif'
 
     def create_sheet_from_images(self, images_path: str, title: Optional[str] = None):

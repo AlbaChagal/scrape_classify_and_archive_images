@@ -1,6 +1,8 @@
+# External Imports
 import os
 from typing import List, Optional
 
+# Internal Imports
 from classify.ocr_number_extractor import OCRNumberExtractor
 
 

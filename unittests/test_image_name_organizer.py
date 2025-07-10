@@ -1,8 +1,10 @@
+# External Imports
 import os
 import unittest
 import tempfile
 from unittest.mock import patch
 
+# Internal Imports
 from archive.image_name_organizer import ImageNameOrganizer
 
 

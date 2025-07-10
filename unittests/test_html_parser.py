@@ -1,6 +1,8 @@
+# External Imports
 import unittest
 from unittest.mock import patch, MagicMock
 from scrape.html_parser import HTMLParser
+
 
 class TestHTMLParser(unittest.TestCase):
 
