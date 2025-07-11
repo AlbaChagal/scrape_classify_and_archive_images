@@ -77,7 +77,7 @@ class CSVWriter:
 
 if __name__ == "__main__":
     # Folder where your images are located
-    folder_path_main = "../data/archive_images"  # Replace with your actual folder path
+    folder_path_main = "~/PycharmProjects/scrape_classify_and_archive_images/data/archive_images"
 
     writer = CSVWriter("outputs/idx_images.xlsx")
     writer.create_sheet_from_images(folder_path_main)

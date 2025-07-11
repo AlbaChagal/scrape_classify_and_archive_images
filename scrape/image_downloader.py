@@ -44,6 +44,6 @@ class ImageDownloader:
 
 if __name__ == "__main__":
 
-    output_dir_main = "../data/archive_images"
+    output_dir_main = "~/PycharmProjects/scrape_classify_and_archive_images/data/archive_images"
 
     ImageDownloader().download_image(urls, output_dir=output_dir_main)

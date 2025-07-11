@@ -57,7 +57,6 @@ class TestCSVWriter(unittest.TestCase):
             os.makedirs("temp_dir", exist_ok=True)
             writer.create_sheet_from_images("temp_dir", title=123)  # Title is not a string
         os.rmdir("temp_dir")
-        os.remove(writer.csv_file)
 
 
 if __name__ == "__main__":

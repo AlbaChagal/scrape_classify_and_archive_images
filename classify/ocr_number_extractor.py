@@ -15,7 +15,59 @@ class OCRNumberExtractor(object):
         pass
 
     @staticmethod
+    def preprocess(img: np.ndarray, contour: Optional[np.ndarray]) -> Image.Image:
+        """
+        Preprocess an image
+        :param img: The image to preprocess
+        :param contour: The contour to create a bbox from (Optional)
+        :return: Preprocessed image
+        """
+        img: np.ndarray
+        if contour is not None:
+            x: int
+            y: int
+            w: int
+            h: int
+            x, y, w, h = cv2.boundingRect(contour)
+            img = img[y: y + h, x: x + w]
+
+        pil_img = Image.fromarray(img)
+        bw_pil_img = pil_img.convert('L')
+        return bw_pil_img
+
+
+    @staticmethod
+    def get_contours(
+            img: np.ndarray,
+            lower_blue_search_range: List[int],
+            upper_blue_search_range: List[int]
+    ) -> Tuple[np.ndarray, ...]:
+        """
+        Get contours from an image
+        :param img: The image to extract contours from
+        :param lower_blue_search_range: The lower boundary of the contour
+        :param upper_blue_search_range: The upper boundary of the contour
+        :return: Contours
+        """
+
+        # Convert the image to HSV (Hue, Saturation, Value) color space
+        hsv: np.ndarray = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+        # Define the range of light blue color in HSV
+        lower_blue: np.ndarray = np.array(lower_blue_search_range)
+        upper_blue: np.ndarray = np.array(upper_blue_search_range)
+
+        # Threshold the image to extract blue areas
+        mask: np.ndarray = cv2.inRange(hsv, lower_blue, upper_blue)
+
+        # Find contours in the mask
+        contours: Tuple[np.ndarray, ...]
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        return contours
+
+    @classmethod
     def extract_number_from_image(
+            cls,
             image_path: str,
             crop_rects: Optional[List[Optional[Tuple[int, int, int, int]]]] = None,
             lower_blue_search_range: Optional[List[int]] = None,
@@ -61,17 +113,8 @@ class OCRNumberExtractor(object):
 
         # Declare all loop-variable types once in advance (for Cythonization)
         first_cropped_img: np.ndarray
-        hsv: np.ndarray
-        lower_blue: np.ndarray
-        upper_blue: np.ndarray
-        mask: np.ndarray
         contours: Tuple[np.ndarray, ...]
-        x: int
-        y: int
-        w: int
-        h: int
         cropped_img: np.ndarray
-        pil_img: Image.Image
         bw_pil_img: Image.Image
         text: str
         number: str
@@ -83,35 +126,16 @@ class OCRNumberExtractor(object):
             first_cropped_img = img[crop_rect[0]: crop_rect[2], crop_rect[1]: crop_rect[3]] \
                 if crop_rect is not None else img
 
-            # Convert the image to HSV (Hue, Saturation, Value) color space
-            hsv = cv2.cvtColor(first_cropped_img, cv2.COLOR_BGR2HSV)
-
-            # Define the range of light blue color in HSV
-            lower_blue = np.array(lower_blue_search_range)
-            upper_blue = np.array(upper_blue_search_range)
-
-            # Threshold the image to extract blue areas
-            mask = cv2.inRange(hsv, lower_blue, upper_blue)
-
-            # Find contours in the mask
-            contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            contours = cls.get_contours(img=first_cropped_img,
+                                        lower_blue_search_range=lower_blue_search_range,
+                                        upper_blue_search_range=upper_blue_search_range)
 
             # Find the bounding box for the largest contour (which should be the blue rectangle)
             for contour in contours:
-                x, y, w, h = cv2.boundingRect(contour)
-
-                # Adjust the bbox if needed (e.g., make it a little larger to account for any margin)
-                # Crop the image to the bounding box region
-                cropped_img = first_cropped_img[y:y + h, x:x + w]
-
-                # Convert cropped image to PIL format for OCR
-                pil_img = Image.fromarray(cropped_img)
-                bw_pil_img = pil_img.convert('L')
+                bw_pil_img = cls.preprocess(img=first_cropped_img, contour=contour)
 
                 # Perform OCR on the cropped image
                 text = pytesseract.image_to_string(bw_pil_img)
-
-                # Extract the first number found in the text
                 number = ''.join([c for c in text if c.isdigit()])
 
                 if number:

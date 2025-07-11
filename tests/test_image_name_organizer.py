@@ -10,7 +10,7 @@ from archive.image_name_organizer import ImageNameOrganizer
 
 class TestImageNameOrganizer(unittest.TestCase):
 
-    @patch("your_module_name.OCRNumberExtractor.extract_number_from_image")
+    @patch("classify.ocr_number_extractor.OCRNumberExtractor.extract_number_from_image")
     def test_rename_images_in_folder(self, mock_extract):
         # Simulate OCR results
         mock_extract.side_effect = ["123", None, "456"]
@@ -45,7 +45,7 @@ class TestImageNameOrganizer(unittest.TestCase):
                 f.write("not an image")
 
             # Patch the OCR extractor to make sure it's never called
-            with patch("your_module_name.OCRNumberExtractor.extract_number_from_image") as mock_extract:
+            with patch("classify.ocr_number_extractor.OCRNumberExtractor.extract_number_from_image") as mock_extract:
                 ImageNameOrganizer.rename_images_in_folder(tmpdir)
                 mock_extract.assert_not_called()
 

@@ -53,5 +53,5 @@ class ImageNameOrganizer(object):
 
 if __name__ == "__main__":
     # Example usage:
-    folder_path = "../data/archive_images"  # Replace with the folder path containing your images
+    folder_path = "~/PycharmProjects/scrape_classify_and_archive_images/data/archive_images"
     ImageNameOrganizer.rename_images_in_folder(folder_path)

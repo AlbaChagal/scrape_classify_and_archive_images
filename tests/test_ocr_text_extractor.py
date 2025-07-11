@@ -6,7 +6,7 @@ from unittest.mock import patch
 from PIL import Image
 
 # Internal Imports
-from classify.ocr_text_extractor import save_text_files_in_folder
+from classify.ocr_text_extractor import OCRTextExtractor
 
 
 class TestOCRPipeline(unittest.TestCase):
@@ -27,7 +27,7 @@ class TestOCRPipeline(unittest.TestCase):
                         f.write("some text")
 
             # Call the function
-            save_text_files_in_folder(tmpdir)
+            OCRTextExtractor().save_text_files_in_folder(tmpdir)
 
             # Check that .txt files were created for the images
             for name in ["image1", "image2"]:

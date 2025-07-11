@@ -18,7 +18,7 @@ class TestHTMLParser(unittest.TestCase):
         result = HTMLParser.extract_img_urls(html)
         self.assertEqual(result, expected)
 
-    @patch("parse_html.requests.get")
+    @patch("scrape.html_parser.requests.get")
     def test_get_html_content_success(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -30,7 +30,7 @@ class TestHTMLParser(unittest.TestCase):
         self.assertEqual(result, "<html></html>")
         mock_get.assert_called_once_with(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
 
-    @patch("parse_html.HTMLParser.get_html_content")
+    @patch("scrape.html_parser.HTMLParser.get_html_content")
     def test_get_all_image_urls_from_site(self, mock_get_html_content):
         sample_html = """
         <html><body>
